@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on codeslinger</title>
+    <link>http://codeslinger.io/posts/</link>
+    <description>Recent content in Posts on codeslinger</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 01 Dec 2017 21:38:57 -0500</lastBuildDate>
+    
+	<atom:link href="http://codeslinger.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>A Better Way to Localize</title>
+      <link>http://codeslinger.io/2017/12/a-better-way-to-localize/</link>
+      <pubDate>Fri, 01 Dec 2017 21:38:57 -0500</pubDate>
+      
+      <guid>http://codeslinger.io/2017/12/a-better-way-to-localize/</guid>
+      <description>&lt;p&gt;Localization is hard. Especially if you don&amp;rsquo;t plan for it ahead of time.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>http://codeslinger.io/2017/10/hello-world/</link>
+      <pubDate>Wed, 25 Oct 2017 00:50:28 -0400</pubDate>
+      
+      <guid>http://codeslinger.io/2017/10/hello-world/</guid>
+      <description>&lt;p&gt;So. Here we are. Another tech blog by another software engineer who thinks he has something to contribute to the world of software that&amp;rsquo;s thoroughly saturated by people much smarter than him. Maybe he thinks he&amp;rsquo;s funnier, wittier, a better writer. Maybe he realized that all of his commits were in private repos and he needs something outward facing to show for it. Or maybe he just thinks that because the domain &lt;a href=&#34;https://codeslinger.io&#34;&gt;https://codeslinger.io&lt;/a&gt; was available, he has to do something with it.
+&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
