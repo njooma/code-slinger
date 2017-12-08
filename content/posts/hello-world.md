@@ -2,12 +2,11 @@
 title: "Hello World"
 description: "Ugh not ANOTHER coding blog"
 author: "njooma"
-date: 2017-10-25T00:50:28-04:00
+date: 2017-12-08T17:56:19-05:00
 tags: []
-draft: true
 ---
 
-So. Here we are. Another tech blog by another software engineer who thinks he has something to contribute to the world of software that's thoroughly saturated by people much smarter than him. Maybe he thinks he's funnier, wittier, a better writer. Maybe he realized that all of his commits were in private repos and he needs something outward facing to show for it. Or maybe he just thinks that because the domain https://codeslinger.io was available, he has to do something with it.
+So. Here we are. Another tech blog by another software engineer who thinks he has something to contribute to the world of software that's thoroughly saturated by people much smarter than him. Maybe he thinks he's funnier, wittier, a better writer. Maybe he realized that all of his commits were in private repos and he needs something outward facing to show for it. Or maybe he just thinks that because the domain http://codeslinger.io was available, he has to do something with it.
 <!--more-->
 
 Well, what now? Now I pretend know things while hiding my true ignorance through personal anecdotes and self-deprecation. A little about myself so you know I'm not entirely incompetent (just mostly):

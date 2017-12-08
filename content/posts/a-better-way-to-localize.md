@@ -10,13 +10,13 @@ draft: true
 Localization is hard. Especially if you don't plan for it ahead of time.
 <!--more-->
 
-Localization on iOS is kind of a mess. You have a `Localizable.strings` file that contains all your strings. But if you need to handle plurals (e.g. "1 day remaining" vs "2 days remaining"), you need a `Localizable.stringsdict` file, which is written in (pretty gross, IMO) XML. On top of that, all the string IDs are stringly-typed which I'm not a fan of (and you shouldn't be either), you can't autocomplete string IDs, there's no easy way to find unused strings, and so many more issues. 
+Localization on iOS is kind of a mess. You have a `Localizable.strings` file that contains all your strings. But if you need to handle plurals (e.g. "1 day remaining" vs "2 days remaining"), you need a `Localizable.stringsdict` file, which is written in (pretty gross, IMO) XML. On top of that, all the string IDs are stringly-typed which I don't like, you can't autocomplete string IDs, there's no easy way to find unused strings, and so many more issues. 
 
 Something Android does extremely well is forcing you to prepare your app for localizations. Android Studio warns you when you've hard-coded strings and gives you an easy way to turn those hard-coded strings into a localized `key: value` in their version of a strings file. Android Studio also autocompletes these string IDs for you when you try to access them in your code. 
 
 Xcode does not. It doesn't yell at you when you haven't localized a hard-coded string, it won't let you autocomplete string IDs, nor will it tell you when you have unused string IDs, forcing you to clean up bloated strings files by hand.
 
-But you really should localize your app. Or at least make it so that you won't regret it if you have to localize later. But what's incredibly annoying is having to use `NSLocalizedString(_:comment:)` everywhere! Seriously. It takes up a lot of space every single time you want to set text. And if you want to set the title of a button, you have to nest this call inside of `setTitle(_:for:)`. And god forbid you have any string formatting to do, or else you might bet a line of code that looks like this:
+But you really should localize your app. Or at least make it so that you won't regret it if you have to localize later. But what's incredibly annoying is having to use `NSLocalizedString(_:comment:)` everywhere! Seriously. It takes up a lot of space every single time you want to set text. And if you want to set the title of a button, you have to nest this call inside of `setTitle(_:for:)`. And god forbid you have any string formatting to do, or else you might get a line of code that looks like this:
 
 {{< highlight swift >}}
 // "stringWithFormatting" = "A string with 2 variables: %1$@ and %2$@";
