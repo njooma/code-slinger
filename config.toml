@@ -2,6 +2,7 @@ baseURL = "http://codeslinger.io/"
 languageCode = "en-us"
 title = "codeslinger"
 theme = "detox"
+publishDir = "docs"
 
 [Author]
     name = "Naveed Jooma"
