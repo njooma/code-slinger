@@ -1,0 +1,6 @@
+[submodule "themes/ghostwriter"]
+	path = themes/ghostwriter
+	url = git@github.com:jbub/ghostwriter.git
+[submodule "themes/detox"]
+	path = themes/detox
+	url = git@github.com:allnightgrocery/hugo-theme-blueberry-detox.git

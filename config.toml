@@ -1,0 +1,51 @@
+baseURL = "http://codeslinger.io/"
+languageCode = "en-us"
+title = "codeslinger"
+theme = "detox"
+
+[Author]
+    name = "Naveed Jooma"
+    profile = "http://joo.ma"
+
+[Taxonomies]
+    tag = "tags"
+
+[Params]
+    intro = true
+    description = "naveed jooma"
+    github = "njooma"
+    gitlab = "njooma"
+    linkedin = "njooma"
+    twitter = "nnj"
+    stackoverflow = "https://stackoverflow.com/users/5249319/naveed-j"
+    opengraph = true
+    shareTwitter = true
+    shareFacebook = true
+    shareGooglePlus = false
+    shareLinkedIn = false
+    dateFormat = "Mon, Jan 2, 2006"
+    highlightJsUrl = ""
+    highlightJsLocalUrl = ""
+
+[Permalinks]
+    posts = "/:year/:month/:filename/"
+
+[[menu.main]]
+    name = "Blog"
+    url = "/"
+    weight = 1
+
+[[menu.main]]
+    name = "Projects"
+    url = "/project/"
+    weight = 2
+
+[[menu.main]]
+    name = "Contact"
+    url = "/page/contact/"
+    weight = 3
+
+[[menu.main]]
+    name = "About"
+    url = "/page/about/"
+    weight = 4

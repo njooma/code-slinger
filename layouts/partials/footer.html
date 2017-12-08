@@ -1,0 +1,26 @@
+    <footer id="site-footer">
+        <div class="container">
+            {{ with .Site.Params.twitter }}
+                <a href="https://www.twitter.com/{{ . }}" title="Twitter" target="_blank"><span class="tooltip"><i class="fa fa-twitter"></i></span></a>
+            {{ end }}
+            {{ with .Site.Params.linkedin }}
+                <a href="https://www.linkedin.com/in/{{ . }}" title="LinkedIn" target="_blank"><span class="tooltip"><i class="fa fa-linkedin"></i></span></a>
+            {{ end }}
+            {{ with .Site.Params.github }}
+                <a href="https://www.github.com/{{ . }}" title="GitHub" target="_blank"><span class="tooltip"><i class="fa fa-github"></i></span></a>
+            {{ end }}
+            {{ with .Site.Params.gitlab }}
+                <a href="https://www.gitlab.com/{{ . }}/" title="GitLab" target="_blank"><span class="tooltip"><i class="fa fa-gitlab"></i></span></a>
+            {{ end }}
+            {{ with .Site.Params.stackoverflow }}
+                <a href="{{ . }}" title="StackOverflow" target="_blank"><span class="tooltip"><i class="fa fa-stack-overflow"></i></span></a>
+            {{ end }}
+            <a href="{{ .Site.BaseURL }}index.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
+            <section>&copy; <a href="{{ .Site.BaseURL }}">{{ .Site.Params.author }}</a> 2017 | All rights reserved</section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="{{ .Site.BaseURL }}js/fittext.js"></script>
+    <script type="text/javascript">
+        $(".heading").fitText();
+    </script>
