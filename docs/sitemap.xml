@@ -3,12 +3,29 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>http://codeslinger.io/2017/12/a-better-way-to-localize/</loc>
+    <lastmod>2017-12-01T21:38:57-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://codeslinger.io/2017/10/hello-world/</loc>
+    <lastmod>2017-10-25T00:50:28-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://codeslinger.io/posts/</loc>
+    <lastmod>2017-12-01T21:38:57-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://codeslinger.io/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://codeslinger.io/</loc>
+    <lastmod>2017-12-01T21:38:57-05:00</lastmod>
     <priority>0</priority>
   </url>
   
