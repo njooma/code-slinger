@@ -2,9 +2,8 @@
 title: "A Better Way to Localize"
 description: "Localization is hard. Especially if you don't plan for it ahead of time."
 author: "njooma"
-date: 2017-12-01T21:38:57-05:00
-tags: []
-draft: true
+date: 2018-02-12T12:45:44-06:00
+tags: ["localization", "enums"]
 ---
 
 Localization is hard. Especially if you don't plan for it ahead of time.
@@ -74,6 +73,6 @@ To address the first: if you haven't figured it out yet, you will soon, but stor
 
 To address the second: this is really only an issue if you're using Xcode's automatic export features to create your XLIFF files to send to translators.
 
-So yeah, there are drawbacks. But like I said in the opening of this post, localization for iOS not great. You won't hear me say it often, but sometimes Android dev gets it right. 
+So yeah, there are drawbacks. But like I said in the opening of this post, localization for iOS not great. This makes it a little bit more bearable.
 
 <iframe src="https://open.spotify.com/embed/track/3RHxEG6JqPKNesUpEv3FUg?theme=white&view=list" width="100%" height="380" frameborder="0" allowtransparency="true"></iframe>
