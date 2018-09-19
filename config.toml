@@ -27,6 +27,7 @@ publishDir = "docs"
     dateFormat = "Mon, Jan 2, 2006"
     highlightJsUrl = ""
     highlightJsLocalUrl = ""
+    custom_css = ["css/overrides.css",]
 
 [Permalinks]
     posts = "/:year/:month/:filename/"
