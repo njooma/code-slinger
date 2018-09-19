@@ -1,0 +1,19 @@
+pre {
+    overflow: scroll;
+}
+
+pre code {
+    white-space: pre;
+}
+
+.post-content a {
+    color: #ee5253;
+}
+
+.post-content a:hover {
+    color: #ff7675;
+}
+
+p code {
+    background: #efefef;
+}
