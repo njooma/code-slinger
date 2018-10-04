@@ -2,9 +2,8 @@
 title: "A Better Way to Localize"
 description: "Localization is hard. Especially if you don't plan for it ahead of time."
 author: "njooma"
-date: 2017-12-01T21:38:57-05:00
-tags: []
-draft: true
+date: 2018-02-12T12:45:44-06:00
+tags: ["localization", "enums"]
 ---
 
 Localization is hard. Especially if you don't plan for it ahead of time.
