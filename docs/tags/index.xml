@@ -6,10 +6,19 @@
     <description>Recent content in Tags on codeslinger</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 12 Feb 2018 12:45:44 -0600</lastBuildDate>
+    <lastBuildDate>Thu, 04 Oct 2018 17:46:10 -0400</lastBuildDate>
     
 	<atom:link href="http://codeslinger.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Decoration View</title>
+      <link>http://codeslinger.io/tags/decoration-view/</link>
+      <pubDate>Thu, 04 Oct 2018 17:46:10 -0400</pubDate>
+      
+      <guid>http://codeslinger.io/tags/decoration-view/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Enums</title>
@@ -21,11 +30,38 @@
     </item>
     
     <item>
+      <title>Iglistkit</title>
+      <link>http://codeslinger.io/tags/iglistkit/</link>
+      <pubDate>Thu, 04 Oct 2018 17:46:10 -0400</pubDate>
+      
+      <guid>http://codeslinger.io/tags/iglistkit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Localization</title>
       <link>http://codeslinger.io/tags/localization/</link>
       <pubDate>Mon, 12 Feb 2018 12:45:44 -0600</pubDate>
       
       <guid>http://codeslinger.io/tags/localization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Uicollectionreusableview</title>
+      <link>http://codeslinger.io/tags/uicollectionreusableview/</link>
+      <pubDate>Thu, 04 Oct 2018 17:46:10 -0400</pubDate>
+      
+      <guid>http://codeslinger.io/tags/uicollectionreusableview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Uicollectionview</title>
+      <link>http://codeslinger.io/tags/uicollectionview/</link>
+      <pubDate>Thu, 04 Oct 2018 17:46:10 -0400</pubDate>
+      
+      <guid>http://codeslinger.io/tags/uicollectionview/</guid>
       <description></description>
     </item>
     

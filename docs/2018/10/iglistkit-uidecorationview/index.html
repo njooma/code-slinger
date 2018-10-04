@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" prefix="og: http://ogp.me/ns#" xmlns:og="http://ogp.me/ns#"><!--<![endif]-->
+
+    <head>
+                <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="UICollectionViewCells, with shadows!">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="author" content="">
+  
+	
+        <meta property="og:site_name" content="codeslinger">
+        <meta property="og:title" content="codeslinger">
+        <meta property="og:url" content="http://codeslinger.io/2018/10/iglistkit-uidecorationview/">
+        <meta property="og:description" content="naveed jooma">
+    
+        <meta property="og:type" content="article" />
+        <meta property="og:article:author" content="" />
+        <meta property="og:article:published_time" content="2018-10-04T17:46:10-04:00" />
+    
+        <meta name="generator" content="Hugo 0.31.1" />
+        <title>Decorating UICollectionViewCells &middot; codeslinger</title>
+        <link rel="canonical" href="http://codeslinger.io/" />
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="">
+        <link rel="stylesheet" type="text/css" href="http://codeslinger.io/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="http://codeslinger.io/css/overrides.css"/>
+        <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300|Montserrat:700" rel="stylesheet" type="text/css">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    </head>
+
+<body>
+<!--[if lt IE 7]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chrome/‎">install Google Chrome</a> to experience this site.</p><![endif]-->
+
+    <header id="site-header">
+        <div class="container">
+            <a href="http://codeslinger.io/" alt="codeslinger"><h1 class="blog-title heading">codeslinger</h1></a>
+            <p class="blog-description">naveed jooma</p>
+        </div>
+    </header>
+<main class="content" role="main">
+	<div class="container">
+		<article class="posts">
+	<header class="post-header">
+        <h3 class="p-post-title">Decorating UICollectionViewCells</h3>
+    </header>
+
+    <section class="post-content">
+        <p><code>UICollectionViewCell</code>s, with more <em>*~*pIzAzZ*~*</em>
+</p>
+
+<h4 id="working-code-at-the-bottom-of-the-post">WORKING CODE AT THE BOTTOM OF THE POST</h4>
+
+<p>One day, while browsing Twitter at work, I saw that Jesse Squires (of JSQMessageViewController fame) retweeted that there was an update to <a href="https://github.com/instagram/IGListKit">IGListKit</a></p>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">IGListKit 3.2 is live! 🎉🚀🎉<br><br>Several awesome new APIs and some important fixes.<a href="https://t.co/gztkMKnrWK">https://t.co/gztkMKnrWK</a><br><br>&gt;1M downloads in &gt;10k apps 💪</p>&mdash; Ryan Nystrom (@_ryannystrom) <a href="https://twitter.com/_ryannystrom/status/961298693742911491?ref_src=twsrc%5Etfw">February 7, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>Interested, I dove in and realized that IGListKit is not only a really powerful set of APIs on top of <code>UICollectionView</code>, it would probably make my life easier trying to create a view to spec. (Browsing Twitter at work for work, nothing wrong there&hellip;) This isn&rsquo;t a post on the amazing features and life-changing nature of IGListKit. Rather, this is about a specific problem I faced that took me an embarrassingly long time to get to a reasonable solution.</p>
+
+<p>But to understand the problem, you first have to understand the basics of IGListKit. And the basics are: you group a series of collection view cells into a section, and treat that section as a single unit with its own controller. You can also group sections together into a super-section and treat that as a unit. For example, the Instagram feed: You could treat the image, the actions, and the comment sections as individual sections acting as a unit.</p>
+
+<p>So what I needed was something with 5 components, expanding to a maximum of 9 components. Nothing too fancy, just a title, description, image, caption, and a view more button. When the view more button is pressed, a detailed description and up to 3 more components expand in. Pretty straightforward:</p>
+
+<p><img src="/static/iglistkit-uidecorationview/image1.png" alt="Section layout" /></p>
+
+<p>But of course, designers can&rsquo;t ever just let it simple. This is what they actually wanted:</p>
+
+<p><img src="/static/iglistkit-uidecorationview/image2.png" alt="Section design" /></p>
+
+<p>Notice the corner radius and drop shadow? Actually that&rsquo;s not too bad. Pretty tame. I didn&rsquo;t figure it would take me too long to bring it up to design.</p>
+
+<h3 id="i-was-mistaken">I was mistaken</h3>
+
+<p>What IGListKit promotes, and what I had done, was made each of the components (title, description, etc.) into it&rsquo;s own cell, and then had the <code>SectionController</code> combine them into a section. So far so good. Now let&rsquo;s try to style these sections.</p>
+
+<h4 id="corner-radius">Corner Radius</h4>
+
+<p>This one&rsquo;s pretty simple: go into each individual <code>UICollectionViewCell</code> that makes up the section, grab the <code>layer</code> and give it a <code>cornerRadius</code>.</p>
+
+<p><img src="/static/iglistkit-uidecorationview/image3.png" alt="Corner radius fail" /></p>
+
+<p>Oh&hellip; Ok not insurmountable, just tell the <code>SectionController</code> to move each cell up by the <code>cornerRadius</code> amount! It&rsquo;s hacky, but no one will know.</p>
+
+<h4 id="drop-shadow">Drop Shadow</h4>
+
+<p>So with the corner radius taken care of, it was time to tackle the drop shadow. So easy! Just give each cell a drop shadow! Since I moved each cell up already, each successive cell should block the shadow of the cell above it. So for the first component, the top and sides of the shadow are visible; for the last component we&rsquo;ll have the sides and bottom; and for everything in between only, the sides will show. Perfect! Wow my hack from above totally saved me so much time!</p>
+
+<p>And honestly, much to my surprise, it kinda worked.</p>
+
+<p><img src="/static/iglistkit-uidecorationview/image4.png" alt="Drop shadows: easy peasy" /></p>
+
+<p>Wow this is awesome! Let me scroll and see my beautifu&ndash;uuuuuuck.</p>
+
+<p><img src="/static/iglistkit-uidecorationview/image5.png" alt="Drop shadows: beautifuck" /></p>
+
+<p>Some of you might have seen this coming. But for an explanation: <code>UICollectionViews</code> automatically recycle cells as they are scrolled off screen. Which means cells aren&rsquo;t always placed in hierarchical order. While this was fine for my <code>cornerRadius</code> hack since all the backgrounds were the same, this doesn&rsquo;t work for shadows when I need each cell to be placed on top of the previous cell.</p>
+
+<p>Not wanting to create more hacks or lose the performance benefits of recycling cells, I decided to query the Internet on how to set up a drop shadow for a collection view section using IGListKit. And this is what I found this <a href="https://github.com/Instagram/IGListKit/issues/805">GitHub Issue</a> that was exactly what I was asking! And the answer was right there! Use &ldquo;decoration view API&rdquo; instead!</p>
+
+<p>&hellip; what are &ldquo;decoration views&rdquo;</p>
+
+<h2 id="decoration-views">Decoration Views</h2>
+
+<p><a href="https://developer.apple.com/library/archive/documentation/WindowsViews/Conceptual/CollectionViewPGforIOS/CreatingCustomLayouts/CreatingCustomLayouts.html#//apple_ref/doc/uid/TP40012334-CH5-SW12">From Apple</a>:</p>
+
+<blockquote>
+<p>Decoration views are visual adornments that enhance the appearance of your collection view layouts. Unlike cells and supplementary views, decoration views provide visual content only and are thus independent of the data source. You can use them to provide custom backgrounds, fill in the spaces around cells, or even obscure cells if you want. Decoration views are defined and managed solely by the layout object and do not interact with the collection view’s data source object.</p>
+</blockquote>
+
+<p>Sounds exactly like what I need. Using a few tutorials and <a href="https://stackoverflow.com/questions/12810628/uicollectionview-decoration-view/39218108#39218108">StackOverflow answers</a>, I eventually got to this:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 1</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ShadowDecorationCollectionReusableView</span>: UICollectionReusableView {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 2</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 3</span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">init</span>(frame: CGRect) {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 4</span>        <span style="color:#66d9ef">super</span>.<span style="color:#66d9ef">init</span>(frame:frame)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 5</span>        
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 6</span>        <span style="color:#75715e">// Add shadow</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 7</span>        backgroundColor = UIColor.gray
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 8</span>        layer.cornerRadius = <span style="color:#ae81ff">4</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;"> 9</span>        layer.shadowColor = UIColor.black.cgColor
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">10</span>        layer.shadowOpacity = <span style="color:#ae81ff">0.2</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">11</span>        layer.shadowRadius = <span style="color:#ae81ff">4</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">12</span>        layer.shadowOffset = CGSize(width: <span style="color:#ae81ff">0</span>, height: <span style="color:#ae81ff">4</span>)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">13</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">14</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">15</span>    <span style="color:#66d9ef">required</span> <span style="color:#66d9ef">init</span>?(coder aDecoder: NSCoder) {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">16</span>        fatalError(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">17</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">18</span>        
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">19</span>}
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">20</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">21</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">22</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ShadowFlowLayout</span>: UICollectionViewFlowLayout {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">23</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">24</span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">init</span>() {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">25</span>        <span style="color:#66d9ef">super</span>.<span style="color:#66d9ef">init</span>()
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">26</span>        
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">27</span>        <span style="color:#75715e">// Register the decoration view cell</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">28</span>        <span style="color:#66d9ef">self</span>.register(ShadowDecorationCollectionReusableView.<span style="color:#66d9ef">self</span>, forDecorationViewOfKind: <span style="color:#e6db74">&#34;ShadowDecoration&#34;</span>)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">29</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">30</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">31</span>    <span style="color:#66d9ef">required</span> <span style="color:#66d9ef">init</span>?(coder aDecoder: NSCoder) {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">32</span>        fatalError(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">33</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">34</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">35</span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForDecorationView</span>(ofKind elementKind: String, at indexPath: IndexPath) -&gt; UICollectionViewLayoutAttributes? {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">36</span>        <span style="color:#75715e">// Get the attributes for the cell at the current index path</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">37</span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> cellAttrs = <span style="color:#66d9ef">self</span>.layoutAttributesForItem(at: indexPath) {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">38</span>            <span style="color:#75715e">// Get the attributes for the decoration view cell</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">39</span>            <span style="color:#66d9ef">let</span> attrs = UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">40</span>            <span style="color:#75715e">// Give the decoration view the same frame as the content cell</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">41</span>            attrs.frame = cellFrame.frame
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">42</span>            <span style="color:#75715e">// Move the decoration cell to the back</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">43</span>            attrs.zIndex = <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">44</span>            <span style="color:#66d9ef">return</span> attrs
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">45</span>        }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">46</span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">47</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">48</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">49</span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForElements</span>(<span style="color:#66d9ef">in</span> rect: CGRect) -&gt; [UICollectionViewLayoutAttributes]? {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">50</span>        <span style="color:#66d9ef">var</span> attributes = <span style="color:#66d9ef">super</span>.layoutAttributesForElements(<span style="color:#66d9ef">in</span>: rect)<span style="color:#f92672">!</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">51</span>        <span style="color:#75715e">// For each cell that&#39;s currently visible...</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">52</span>        <span style="color:#66d9ef">for</span> attribute <span style="color:#66d9ef">in</span> attributes {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">53</span>            <span style="color:#75715e">// Get the decoration attributes and add that to the list of attributes</span>
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">54</span>            <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> decAttrs = layoutAttributesForDecorationView(ofKind: <span style="color:#e6db74">&#34;ShadowDecoration&#34;</span>, at: attribute.indexPath) {
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">55</span>                attributes.append(decAttrs)
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">56</span>            }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">57</span>        }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">58</span>        <span style="color:#66d9ef">return</span> attributes
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">59</span>    }
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">60</span>    
+<span style="color:#7c7c79;margin-right:0.4em;padding:00.4em00.4em;">61</span>}</code></pre></div>
+
+<p>This basically does the exact same thing I was doing earlier: every cell is partnered with a decoration view with a shadow. But this time, I&rsquo;m forcing the shadow to always be behind everything with <code>attrs.zIndex = -1</code>. Looking good and it works with scroll.</p>
+
+<p>And it did work. For a few months.</p>
+
+<p>I ran into issues with sections containing cells of different widths: now the sides of the shadows don&rsquo;t line up. My shortcuts have failed and I need to solve the root problem now: how to add a drop shadow to an entire section using decoration views.</p>
+
+<p>More searches later<sup class="footnote-ref" id="fnref:1"><a rel="footnote" href="#fn:1">1</a></sup><sup class="footnote-ref" id="fnref:2"><a rel="footnote" href="#fn:2">2</a></sup><sup class="footnote-ref" id="fnref:3"><a rel="footnote" href="#fn:3">3</a></sup> and I had an idea. I was being pointed in the right direction and almost had everything I needed. The only difference was that I was treating a section as a single unit, while all these online articles were treating them as what they&rsquo;re traditionally used as: groupings of individual cells. But the suggestions were all the same:</p>
+
+<p>From the <code>indexPath</code>, get the <code>section</code>. From the <code>section</code>, get the first cell and the last cell. Finally, create a decoration view whose frame spans from the origin of the first cell to the <code>maxX</code> and <code>maxY</code> of the last cell.</p>
+
+<p><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SectionShadowFlowLayout</span>: UICollectionViewFlowLayout {
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">init</span>() {
+        <span style="color:#66d9ef">super</span>.<span style="color:#66d9ef">init</span>()
+        
+        <span style="color:#66d9ef">self</span>.register(SectionShadowCollectionReusableView.<span style="color:#66d9ef">self</span>, forDecorationViewOfKind: <span style="color:#e6db74">&#34;SectionShadowCollectionReusableView&#34;</span>)
+    }
+    
+    <span style="color:#66d9ef">required</span> <span style="color:#66d9ef">init</span>?(coder aDecoder: NSCoder) {
+        fatalError(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+    }
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForDecorationView</span>(ofKind elementKind: String, at indexPath: IndexPath) -&gt; UICollectionViewLayoutAttributes? {
+        
+        <span style="color:#75715e">// Get the first and last attributes in the section</span>
+        <span style="color:#66d9ef">guard</span> <span style="color:#66d9ef">let</span> itemCount = <span style="color:#66d9ef">self</span>.collectionView?.numberOfItems(inSection: indexPath.section),
+            <span style="color:#66d9ef">let</span> first = <span style="color:#66d9ef">self</span>.layoutAttributesForItem(at: IndexPath(item: <span style="color:#ae81ff">0</span>, section: indexPath.section)),
+            <span style="color:#66d9ef">let</span> last = <span style="color:#66d9ef">self</span>.layoutAttributesForItem(at: IndexPath(item: itemCount<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, section: indexPath.section)) <span style="color:#66d9ef">else</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+        }
+        
+        <span style="color:#75715e">// Get the frame for the decoration view</span>
+        <span style="color:#66d9ef">let</span> origin = first.frame.origin
+        <span style="color:#66d9ef">let</span> width = first.frame.width
+        <span style="color:#66d9ef">let</span> height = last.frame.maxY<span style="color:#f92672">-</span>first.frame.minY
+        <span style="color:#66d9ef">let</span> size = CGSize(width: width, height: height)
+        
+        <span style="color:#75715e">// Do the same as before</span>
+        <span style="color:#66d9ef">let</span> attrs = UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
+        attrs.frame = CGRect(origin: origin, size: size)
+        attrs.zIndex = <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+        decorationAttributesForSection[indexPath.section] = attrs
+        <span style="color:#66d9ef">return</span> attrs
+    }
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForElements</span>(<span style="color:#66d9ef">in</span> rect: CGRect) -&gt; [UICollectionViewLayoutAttributes]? {
+        <span style="color:#66d9ef">var</span> attributes = <span style="color:#66d9ef">super</span>.layoutAttributesForElements(<span style="color:#66d9ef">in</span>: rect)<span style="color:#f92672">!</span>
+        
+        <span style="color:#66d9ef">for</span> attribute <span style="color:#66d9ef">in</span> attributes {
+            <span style="color:#66d9ef">let</span> decAttrs = layoutAttributesForDecorationView(ofKind: <span style="color:#e6db74">&#34;SectionShadowCollectionReusableView&#34;</span>, at: attribute.indexPath) {
+            attributes.append(decAttrs)
+            sections.insert(attribute.indexPath.section)
+        }
+        <span style="color:#66d9ef">return</span> attributes
+    }
+    
+}</code></pre></div></p>
+
+<p>If you try to run this code, you&rsquo;ll notice a crippling defect: it&rsquo;s incredibly slow, and you receive multiple shadows for each section. This is because as the user scrolls, I&rsquo;m calculating the shadow of the entire section <em>for each visible cell in the section</em>. So if I have 5 visible cells, I&rsquo;m doing this calculation 5 times for the same section, and adding 5 decoration views. To get around this, I started saving which sections I had already checked.</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForElements</span>(<span style="color:#66d9ef">in</span> rect: CGRect) -&gt; [UICollectionViewLayoutAttributes]? {
+    <span style="color:#66d9ef">var</span> attributes = <span style="color:#66d9ef">super</span>.layoutAttributesForElements(<span style="color:#66d9ef">in</span>: rect)<span style="color:#f92672">!</span>
+    
+    <span style="color:#75715e">// Make sure we don&#39;t run the calculations multiple times for the same section</span>
+    <span style="color:#66d9ef">var</span> sections = Set&lt;Int<span style="color:#f92672">&gt;</span>()
+    <span style="color:#66d9ef">for</span> attribute <span style="color:#66d9ef">in</span> attributes {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>(sections.contains(attribute.indexPath.section)),
+            <span style="color:#66d9ef">let</span> decAttrs = layoutAttributesForDecorationView(ofKind: <span style="color:#e6db74">&#34;SectionShadowCollectionReusableView&#34;</span>, at: attribute.indexPath) {
+            attributes.append(decAttrs)
+            sections.insert(attribute.indexPath.section)
+        }
+    }
+    <span style="color:#66d9ef">return</span> attributes
+}</code></pre></div>
+
+<p>So while this sped things up, it didn&rsquo;t solve the multiple decoration views. That took me a while to track down, but it&rsquo;s because once decoration views are added, they aren&rsquo;t removed (even though we&rsquo;re adding the attributes every single time). So I introduced a dictionary that stored sections with their attributes, and voilà!</p>
+
+<h2 id="working-code">Working Code</h2>
+
+<p>Working code to add shadows to entire sections in a UICollectionView:</p>
+
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SectionShadowFlowLayout</span>: UICollectionViewFlowLayout {
+    
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">var</span> decorationAttributesForSection = [Int: UICollectionViewLayoutAttributes]()
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">init</span>() {
+        <span style="color:#66d9ef">super</span>.<span style="color:#66d9ef">init</span>()
+        
+        <span style="color:#66d9ef">self</span>.register(SectionShadowCollectionReusableView.<span style="color:#66d9ef">self</span>, forDecorationViewOfKind: <span style="color:#e6db74">&#34;SectionShadowCollectionReusableView&#34;</span>)
+    }
+    
+    <span style="color:#66d9ef">required</span> <span style="color:#66d9ef">init</span>?(coder aDecoder: NSCoder) {
+        fatalError(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+    }
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForDecorationView</span>(ofKind elementKind: String, at indexPath: IndexPath) -&gt; UICollectionViewLayoutAttributes? {
+        
+        <span style="color:#66d9ef">guard</span> <span style="color:#66d9ef">let</span> lastIndex = <span style="color:#66d9ef">self</span>.collectionView?.numberOfItems(inSection: indexPath.section),
+            <span style="color:#66d9ef">let</span> first = <span style="color:#66d9ef">self</span>.layoutAttributesForItem(at: IndexPath(item: <span style="color:#ae81ff">0</span>, section: indexPath.section)),
+            <span style="color:#66d9ef">let</span> last = <span style="color:#66d9ef">self</span>.layoutAttributesForItem(at: IndexPath(item: lastIndex<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, section: indexPath.section)) <span style="color:#66d9ef">else</span> {
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+        }
+        
+        <span style="color:#66d9ef">let</span> origin = first.frame.origin
+        <span style="color:#66d9ef">let</span> width = first.frame.width
+        <span style="color:#66d9ef">let</span> height = last.frame.maxY<span style="color:#f92672">-</span>first.frame.minY
+        <span style="color:#66d9ef">let</span> size = CGSize(width: width, height: height)
+        
+        <span style="color:#75715e">// Have to return the same attribute object from cache or else it&#39;ll get added twice</span>
+        <span style="color:#66d9ef">let</span> attrs = decorationAttributesForSection[indexPath.section] ?? UICollectionViewLayoutAttributes(forDecorationViewOfKind: elementKind, with: indexPath)
+        attrs.frame = CGRect(origin: origin, size: size)
+        attrs.zIndex = <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+        decorationAttributesForSection[indexPath.section] = attrs
+        <span style="color:#66d9ef">return</span> attrs
+    }
+    
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">layoutAttributesForElements</span>(<span style="color:#66d9ef">in</span> rect: CGRect) -&gt; [UICollectionViewLayoutAttributes]? {
+        <span style="color:#66d9ef">var</span> attributes = <span style="color:#66d9ef">super</span>.layoutAttributesForElements(<span style="color:#66d9ef">in</span>: rect)<span style="color:#f92672">!</span>
+        
+        <span style="color:#75715e">// Make sure we don&#39;t run the calculations multiple times for the same section</span>
+        <span style="color:#66d9ef">var</span> sections = Set&lt;Int<span style="color:#f92672">&gt;</span>()
+        <span style="color:#66d9ef">for</span> attribute <span style="color:#66d9ef">in</span> attributes {
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">!</span>(sections.contains(attribute.indexPath.section)),
+                <span style="color:#66d9ef">let</span> decAttrs = layoutAttributesForDecorationView(ofKind: <span style="color:#e6db74">&#34;SectionShadowCollectionReusableView&#34;</span>, at: attribute.indexPath) {
+                attributes.append(decAttrs)
+                sections.insert(attribute.indexPath.section)
+            }
+        }
+        <span style="color:#66d9ef">return</span> attributes
+    }
+    
+}</code></pre></div>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1"><a href="https://mpospese.com/2012/12/11/decorationviews/">https://mpospese.com/2012/12/11/decorationviews/</a>
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2"><a href="http://strawberrycode.com/blog/how-to-create-a-section-background-in-a-uicollectionview-in-ios-swift/">http://strawberrycode.com/blog/how-to-create-a-section-background-in-a-uicollectionview-in-ios-swift/</a>
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3"><a href="https://stackoverflow.com/questions/13609204/how-to-change-background-color-of-a-whole-section-in-uicollectionview">https://stackoverflow.com/questions/13609204/how-to-change-background-color-of-a-whole-section-in-uicollectionview</a>
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+</ol>
+</div>
+    </section>
+
+    <hr>
+
+    <footer class="post-footer">
+        <section class="f-1">
+            
+            <section class="author">
+                <p>Words by njooma</p>
+            </section>
+            
+            
+            <p class="f-post-time"><time datetime="2018-10-04T17:46:10-04:00">October 4, 2018</time></p>
+        </section>
+                        
+        <section class="f-2">
+            <section class="share">
+                <span>Share:
+                <a class="icon-twitter" href="http://twitter.com/share?text=Decorating%20UICollectionViewCells&url=http%3a%2f%2fcodeslinger.io%2f2018%2f10%2figlistkit-uidecorationview%2f"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fcodeslinger.io%2f2018%2f10%2figlistkit-uidecorationview%2f"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http%3a%2f%2fcodeslinger.io%2f2018%2f10%2figlistkit-uidecorationview%2f"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="fa fa-google-plus"></i>
+                </a>
+                </span>
+            </section>
+
+            
+            	<span class="f-post-tags"><i class="fa fa-tag"></i>
+            	UICollectionView, IGListKit, Decoration View, UICollectionReusableView
+            	</span>
+            
+        </section>
+                        
+    </footer>
+</article>
+	</div>
+</main>
+    <footer id="site-footer">
+        <div class="container">
+            
+                <a href="https://www.twitter.com/nnj" title="Twitter" target="_blank"><span class="tooltip"><i class="fa fa-twitter"></i></span></a>
+            
+            
+                <a href="https://www.linkedin.com/in/njooma" title="LinkedIn" target="_blank"><span class="tooltip"><i class="fa fa-linkedin"></i></span></a>
+            
+            
+                <a href="https://www.github.com/njooma" title="GitHub" target="_blank"><span class="tooltip"><i class="fa fa-github"></i></span></a>
+            
+            
+                <a href="https://www.gitlab.com/njooma/" title="GitLab" target="_blank"><span class="tooltip"><i class="fa fa-gitlab"></i></span></a>
+            
+            
+                <a href="https://stackoverflow.com/users/5249319/naveed-j" title="StackOverflow" target="_blank"><span class="tooltip"><i class="fa fa-stack-overflow"></i></span></a>
+            
+            <a href="http://codeslinger.io/index.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
+            <section>&copy; <a href="http://codeslinger.io/"></a> 2018 | All rights reserved</section>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="http://codeslinger.io/js/fittext.js"></script>
+    <script type="text/javascript">
+        $(".heading").fitText();
+    </script>
+
+
+
+</body>
+</html>

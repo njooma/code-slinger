@@ -24,11 +24,12 @@
         <meta property="og:article:author" content="" />
         <meta property="og:article:published_time" content="2018-02-12T12:45:44-06:00" />
     
-        <meta name="generator" content="Hugo 0.34" />
+        <meta name="generator" content="Hugo 0.31.1" />
         <title>A Better Way to Localize &middot; codeslinger</title>
         <link rel="canonical" href="http://codeslinger.io/" />
         <link rel="alternate" type="application/rss+xml" title="RSS" href="">
         <link rel="stylesheet" type="text/css" href="http://codeslinger.io/css/main.css"/>
+        <link rel="stylesheet" type="text/css" href="http://codeslinger.io/css/overrides.css"/>
         <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300|Montserrat:700" rel="stylesheet" type="text/css">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -54,9 +55,9 @@
         <p>Localization is hard. Especially if you don&rsquo;t plan for it ahead of time.
 </p>
 
-<p>Localization on iOS is kind of a mess. You have a <code>Localizable.strings</code> file that contains all your strings. But if you need to handle plurals (e.g. &ldquo;1 day remaining&rdquo; vs &ldquo;2 days remaining&rdquo;), you need a <code>Localizable.stringsdict</code> file, which is written in (pretty gross, IMO) XML. On top of that, all the string IDs are stringly-typed which I don&rsquo;t like, you can&rsquo;t autocomplete string IDs, there&rsquo;s no easy way to find unused strings, and so many more issues.</p>
+<p>Localization on iOS is kind of a mess. You have a <code>Localizable.strings</code> file that contains all your strings. But if you need to handle plurals (e.g. &ldquo;1 day remaining&rdquo; vs &ldquo;2 days remaining&rdquo;), you need a <code>Localizable.stringsdict</code> file, which is written in XML (always fun). On top of that, all the string IDs are stringly-typed (which, in a strongly-typed language like Swift, feels out of place), you can&rsquo;t autocomplete string IDs, there&rsquo;s no easy way to find unused strings, etc., etc.</p>
 
-<p>Something Android does extremely well is forcing you to prepare your app for localizations. Android Studio warns you when you&rsquo;ve hard-coded strings and gives you an easy way to turn those hard-coded strings into a localized <code>key: value</code> in their version of a strings file. Android Studio also autocompletes these string IDs for you when you try to access them in your code.</p>
+<p>Something Android does extremely well is forcing you to prepare your app for localizations. Android Studio warns you when you&rsquo;ve hard-coded strings and gives you an easy way to turn those hard-coded strings into a localized <code>key: value</code> in their version of a strings file. Literally just a click of a button. Android Studio also autocompletes these string IDs for you when you try to access them in your code. (I would be remiss if, while showering praises on Android, I didn&rsquo;t mention that the entire Android strings file is XML&hellip;)</p>
 
 <p>Xcode does not. It doesn&rsquo;t yell at you when you haven&rsquo;t localized a hard-coded string, it won&rsquo;t let you autocomplete string IDs, nor will it tell you when you have unused string IDs, forcing you to clean up bloated strings files by hand.</p>
 
@@ -70,11 +71,13 @@ button.setTitle(
 
 <h4 id="yeah">Yeah.</h4>
 
+<p>Of course you could split it up into multiple lines and create objects to house intermediary values, but my point is that it shouldn&rsquo;t be this bad.</p>
+
 <p>So how can we make this better?</p>
 
 <p>Well, if you picked up on my foreshadowing from the top of this post, you&rsquo;ll know that one of the bits of Android localization I like most is autocomplete of string identifiers. And one of the things I hate most about iOS localization is maintaining a strings file in a constantly changing app.</p>
 
-<p>The solution I came up with (probably much later than others) is organizing your localization string IDs in a single file using <code>enum</code>s. This solves a bunch of our problems: you can easily see which strings are not called anywhere in your code, you get autocomplete, and BONUS: you don&rsquo;t have to do crazy-ugly-super-long-basically-run-on-sentence lines of code.</p>
+<p>The solution I came up with is organizing your localization string IDs in a single file using <code>enum</code>s. Probably not the most original of ideas, but I like it. This solves a bunch of our problems: you can easily see which strings are not called anywhere in your code, you get autocomplete, and BONUS: you don&rsquo;t have to do crazy-ugly-super-long-basically-run-on-sentence lines of code.</p>
 
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">protocol</span> <span style="color:#a6e22e">LocalizationKey</span> {
     <span style="color:#66d9ef">var</span> localized: String { <span style="color:#66d9ef">get</span> }
@@ -95,7 +98,7 @@ button.setTitle(
     String(format: LocalizationKeys.stringWith2Variables.localized, variable1, variable2), 
     <span style="color:#66d9ef">for</span>: .normal)</code></pre></div>
 
-<p>You can even namespace your keys using nested <code>enum</code>s, but you lose one benefit if you do that: you cannot have multiple <code>case</code>s with the same value within the same <code>enum</code>. So if you find yourself using the same value, you&rsquo;ll be warned of the duplicate if those <code>case</code>s are siblings.</p>
+<p>You can even namespace your keys using nested <code>enum</code>s, but you lose one benefit if you do that: Xcode will warn you if sibling <code>case</code>s have the same value, since you cannot have multiple <code>case</code>s with the same value within the same <code>enum</code>. By nesting <code>enum</code>s, you will no longer be warned of potential duplicate strings.</p>
 
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-swift" data-lang="swift"><span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">LocalizationKeys</span>: String, LocalizationKey {
     <span style="color:#66d9ef">case</span> localizedIDOne = <span style="color:#e6db74">&#34;localizedString&#34;</span>
@@ -106,13 +109,13 @@ button.setTitle(
     }
 }</code></pre></div>
 
-<p>There are some obvious downsides with this method: you cannot use it in storyboards, and you lose the ability to leave comments for your translators (just to enumerate a few).</p>
+<p>There are some obvious downsides with this method: you cannot use it in storyboards, and you lose the ability to automatically export localization files using Xcode&rsquo;s built-in &ldquo;Export for Localization&rdquo; option.</p>
 
-<p>To address the first: if you haven&rsquo;t figured it out yet, you will soon, but storyboards kinda suck. I&rsquo;ll often use storyboards only to layout the most simple user interfaces, but still customize and set text in the view controller.</p>
+<p>To address the first: if you haven&rsquo;t figured it out yet, you will soon, but storyboards kinda suck. Using them as part of a team can get extremely frustrating, it&rsquo;s nearly impossible to handle any merge conflicts, and I usually end up setting a lot of content in code anyway (less and less because Apple keeps making strides, like named color assets, but storyboards still have some work to do). I guess if you&rsquo;re living the storyboard life you theoretically could create an extension on <code>UILabel</code> that allowed you set the <code>LocalizationKey</code> via <code>@IBInspectable</code>. Or by subclassing <code>UILabel</code>. So not impossible to use with storyboards, but you lose some main benefits (namely strongly-typed keys).</p>
 
-<p>To address the second: this is really only an issue if you&rsquo;re using Xcode&rsquo;s automatic export features to create your XLIFF files to send to translators.</p>
+<p>To address the second: It&rsquo;s a little more work up-front, but you will have to create your own <code>Localizable.strings</code> file (and <code>.stringsdict</code> if needed). Every translation service I have used will allow you to upload a <code>.strings</code> file and can parse and translate your phrases from there. So a mild up-front inconvenience in exchange for larger benefits. And I&rsquo;m sure if you really wanted to automate, you could script the creation of a <code>.strings</code> file by extending the <code>LocalizationKey</code> protocol with <code>comment: String</code> and <code>defaultValue: String</code> fields and then iterating over the <code>case</code>s.</p>
 
-<p>So yeah, there are drawbacks. But like I said in the opening of this post, localization for iOS not great. This makes it a little bit more bearable.</p>
+<p>So yes, there are drawbacks. But like I said in the opening of this post, localization for iOS not great and I found that this makes it more tolerable.</p>
 
 <iframe src="https://open.spotify.com/embed/track/3RHxEG6JqPKNesUpEv3FUg?theme=white&view=list" width="100%" height="380" frameborder="0" allowtransparency="true"></iframe>
     </section>
@@ -177,7 +180,7 @@ button.setTitle(
                 <a href="https://stackoverflow.com/users/5249319/naveed-j" title="StackOverflow" target="_blank"><span class="tooltip"><i class="fa fa-stack-overflow"></i></span></a>
             
             <a href="http://codeslinger.io/index.xml" title="Get the RSS feed"><span class="tooltip"><i class="fa fa-rss"></i></span></a>
-            <section>&copy; <a href="http://codeslinger.io/"></a> 2017 | All rights reserved</section>
+            <section>&copy; <a href="http://codeslinger.io/"></a> 2018 | All rights reserved</section>
         </div>
     </footer>
 
