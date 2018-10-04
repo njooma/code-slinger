@@ -2,9 +2,8 @@
 title: "Decorating UICollectionViewCells"
 description: "UICollectionViewCells, with shadows!"
 author: "njooma"
-date: 2018-09-19T14:17:34-04:00
-tags: []
-draft: true
+date: 2018-10-04T17:46:10-04:00
+tags: [UICollectionView, IGListKit, Decoration View, UICollectionReusableView]
 ---
 
 `UICollectionViewCell`s, with more *\*\~\*pIzAzZ\*\~\**
