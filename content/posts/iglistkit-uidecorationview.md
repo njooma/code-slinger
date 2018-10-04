@@ -7,7 +7,7 @@ tags: []
 draft: true
 ---
 
-UICollectionViewCells, with more *\*\~\*pIzAzZ\*\~\**
+`UICollectionViewCell`s, with more *\*\~\*pIzAzZ\*\~\**
 <!--more-->
 
 #### WORKING CODE AT THE BOTTOM OF THE POST ####
@@ -18,7 +18,7 @@ One day, while browsing Twitter at work, I saw that Jesse Squires (of JSQMessage
 
 Interested, I dove in and realized that IGListKit is not only a really powerful set of APIs on top of `UICollectionView`, it would probably make my life easier trying to create a view to spec. (Browsing Twitter at work for work, nothing wrong there...) This isn't a post on the amazing features and life-changing nature of IGListKit. Rather, this is about a specific problem I faced that took me an embarrassingly long time to get to a reasonable solution. 
 
-But to understand the problem, you first have to understand the basics of IGListKit. And the basics are: you group a series of collection view cells into a section, and treat that section as a single unit with its own controller. You can also group sections together into a super-section and treat that as a unit. For example, the Instagram feed: You could treat image, the actions, and the comment sections as individual sections acting as a unit. 
+But to understand the problem, you first have to understand the basics of IGListKit. And the basics are: you group a series of collection view cells into a section, and treat that section as a single unit with its own controller. You can also group sections together into a super-section and treat that as a unit. For example, the Instagram feed: You could treat the image, the actions, and the comment sections as individual sections acting as a unit. 
 
 So what I needed was something with 5 components, expanding to a maximum of 9 components. Nothing too fancy, just a title, description, image, caption, and a view more button. When the view more button is pressed, a detailed description and up to 3 more components expand in. Pretty straightforward:
 
@@ -30,7 +30,7 @@ But of course, designers can't ever just let it simple. This is what they actual
 
 Notice the corner radius and drop shadow? Actually that's not too bad. Pretty tame. I didn't figure it would take me too long to bring it up to design. 
 
-## I was mistaken ##
+### I was mistaken ###
 
 What IGListKit promotes, and what I had done, was made each of the components (title, description, etc.) into it's own cell, and then had the `SectionController` combine them into a section. So far so good. Now let's try to style these sections.
 
@@ -133,11 +133,11 @@ class ShadowFlowLayout: UICollectionViewFlowLayout {
 
 This basically does the exact same thing I was doing earlier: every cell is partnered with a decoration view with a shadow. But this time, I'm forcing the shadow to always be behind everything with `attrs.zIndex = -1`. Looking good and it works with scroll. 
 
-And it worked for a few months. 
+And it did work. For a few months. 
 
-I ran into issues when sections containing cells of different widths: now the sides of the shadows don't line up. My shortcuts have failed and I need to solve the root problem now: how to add a drop shadow to an entire section using decoration views? 
+I ran into issues with sections containing cells of different widths: now the sides of the shadows don't line up. My shortcuts have failed and I need to solve the root problem now: how to add a drop shadow to an entire section using decoration views.
 
-More searches later[^1][^2][^3] and I had an idea. I was being pointed in the right direction and almost had everything I needed. The only difference was that I was treating a section as a single unit, while all these online articles were treating them as what they were: sections of cells. But the suggestions were all the same:
+More searches later[^1][^2][^3] and I had an idea. I was being pointed in the right direction and almost had everything I needed. The only difference was that I was treating a section as a single unit, while all these online articles were treating them as what they're traditionally used as: groupings of individual cells. But the suggestions were all the same:
 
 From the `indexPath`, get the `section`. From the `section`, get the first cell and the last cell. Finally, create a decoration view whose frame spans from the origin of the first cell to the `maxX` and `maxY` of the last cell.
 
@@ -191,7 +191,7 @@ class SectionShadowFlowLayout: UICollectionViewFlowLayout {
 }
 {{< / highlight >}}
 
-If you try to run this code, you'll notice a crippling defect: it's incredibly slow, and you receive multiple shadows for each section. This is because as the user scrolls, I'm calculating the shadow for the entire section *for each visible cell in the section*. So if I have 5 visible cells, I'm doing this calculation 5 times for the same section, and adding 5 decoration views. To get around this, I started saving which sections I had already checked.
+If you try to run this code, you'll notice a crippling defect: it's incredibly slow, and you receive multiple shadows for each section. This is because as the user scrolls, I'm calculating the shadow of the entire section *for each visible cell in the section*. So if I have 5 visible cells, I'm doing this calculation 5 times for the same section, and adding 5 decoration views. To get around this, I started saving which sections I had already checked.
 
 {{< highlight swift >}}
 override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
